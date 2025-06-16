@@ -1,9 +1,7 @@
-import React from 'react'
+import Kanban from "./components/Kanban";
 
 function App() {
-  return (
-    <h1>Hello world</h1>
-  )
+  return <Kanban />;
 }
 
-export default App
+export default App;
