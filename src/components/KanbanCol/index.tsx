@@ -4,21 +4,18 @@ import "./KanbanCol.scss";
 type KanbanColProps = {
   label: string;
   items: string[];
+  index: number;
+  numCols: number;
+  move: (item: string, fromCol: number, toCol: number) => void;
 };
 
-const KanbanCol = ({ label, items }: KanbanColProps) => {
-  const handleDragOver = (e) => e.preventDefault();
-  const handleDrop = (e) => {
-    const draggedElementId = e.dataTransfer.getData("text");
-    console.log(draggedElementId);
-    console.log(`dropped over col ${label}`);
-  };
+const KanbanCol = ({ label, items, index, numCols, move }: KanbanColProps) => {
   return (
-    <div className="kanban_col" onDragOver={handleDragOver} onDrop={handleDrop}>
+    <div className="kanban_col">
       <h1>{label}</h1>
       <div>
         {items.map((item) => (
-          <KanbanItem label={item} />
+          <KanbanItem label={item} index={index} numCols={numCols} move={move} />
         ))}
       </div>
     </div>
