@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import KanbanCol from "../KanbanCol";
 import "./Kanban.scss";
+import AddColumn from "../AddColumn";
 
 type KanbanItem = {
   label: string;
@@ -25,6 +26,10 @@ const initialColumns: KanbanItem[] = [
 const Kanban = () => {
   const [columns, setColumns] = useState<KanbanItem[]>(initialColumns);
   const newItemRef = useRef(null);
+
+  const addColumn = (label: string) => {
+    setColumns([...columns, { label, items: []}])
+  }
 
   const addItem = () => {
     const item = newItemRef?.current?.value?.trim();
@@ -69,6 +74,7 @@ const Kanban = () => {
             move={move}
           />
         ))}
+        <AddColumn add={addColumn} />
       </div>
     </>
   );
