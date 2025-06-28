@@ -1,4 +1,3 @@
-import ChessBoard from "./components/Chessboard";
 import Kanban from "./components/Kanban";
 
 function App() {
