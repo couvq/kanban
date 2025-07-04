@@ -1,0 +1,20 @@
+.autocomplete {
+    max-width: max-content;
+    z-index: 1000;
+
+    .dropdown {
+        margin-top: 4px;
+        border: 1px solid lightgray;
+        border-radius: 4px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+
+    .dropdown_item {
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .dropdown_item:hover {
+        background-color: lightblue;
+    }
+}
