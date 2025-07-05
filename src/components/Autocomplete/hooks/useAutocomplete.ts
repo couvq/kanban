@@ -1,4 +1,5 @@
-import { useState, type ChangeEvent } from "react";
+import { useMemo, useState, type ChangeEvent } from "react";
+import useDebounce from "./useDebounce";
 
 const useAutocomplete = (
   suggestions: string[],
@@ -13,6 +14,7 @@ const useAutocomplete = (
 ] => {
   const [searchText, setSearchText] = useState("");
   const [hasSelected, setHasSelected] = useState(false);
+  const debouncedSearchText = useDebounce<string>(searchText, 300);
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     setHasSelected(false);
@@ -32,18 +34,25 @@ const useAutocomplete = (
   };
 
   const search = () => {
-    if (searchText.length >= threshold) {
+    if (debouncedSearchText.length >= threshold) {
       return suggestions.filter((value) =>
-        value.toLowerCase().includes(searchText.toLowerCase())
+        value.toLowerCase().includes(debouncedSearchText.toLowerCase())
       );
     }
 
     return [];
   };
 
-  const results = search();
+  const results = useMemo<string[]>(() => search(), [debouncedSearchText])
 
-  return [searchText, handleInput, results, hasSelected, handleSelect, handleKeyboardSelect];
+  return [
+    searchText,
+    handleInput,
+    results,
+    hasSelected,
+    handleSelect,
+    handleKeyboardSelect,
+  ];
 };
 
 export default useAutocomplete;
