@@ -10,7 +10,8 @@ const useAutocomplete = (
   string[],
   boolean,
   (value: string) => void,
-  (value: string, e: KeyboardEvent) => void
+  (value: string, e: KeyboardEvent) => void,
+  () => void
 ] => {
   const [searchText, setSearchText] = useState("");
   const [hasSelected, setHasSelected] = useState(false);
@@ -43,6 +44,8 @@ const useAutocomplete = (
     return [];
   };
 
+  const close = () => setHasSelected(true)
+
   const results = useMemo<string[]>(() => search(), [debouncedSearchText])
 
   return [
@@ -52,6 +55,7 @@ const useAutocomplete = (
     hasSelected,
     handleSelect,
     handleKeyboardSelect,
+    close
   ];
 };
 

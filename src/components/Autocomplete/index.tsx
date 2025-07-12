@@ -1,5 +1,7 @@
 import useAutocomplete from "./hooks/useAutocomplete";
 import "./Autocomplete.scss";
+import { useRef } from "react";
+import useClickOutside from "./hooks/useClickOutside";
 
 type AutocompleteProps = {
   /** All possible values to search for. */
@@ -9,8 +11,17 @@ type AutocompleteProps = {
 };
 
 const Autocomplete = ({ suggestions, threshold = 0 }: AutocompleteProps) => {
-  const [searchText, handleInput, results, hasSelected, handleSelect, handleKeyboardSelect] =
-    useAutocomplete(suggestions, threshold);
+  const [
+    searchText,
+    handleInput,
+    results,
+    hasSelected,
+    handleSelect,
+    handleKeyboardSelect,
+    close,
+  ] = useAutocomplete(suggestions, threshold);
+  const menuRef = useRef()
+  useClickOutside(menuRef, close)
 
   return (
     <div className="autocomplete">
@@ -20,7 +31,7 @@ const Autocomplete = ({ suggestions, threshold = 0 }: AutocompleteProps) => {
         onChange={handleInput}
       />
       {results.length > 0 && !hasSelected && (
-        <ul className="dropdown">
+        <ul className="dropdown" ref={menuRef}>
           {results.map((result) => (
             <li
               key={result}
