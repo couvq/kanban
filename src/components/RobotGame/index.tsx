@@ -5,7 +5,7 @@ const robotEmoji = "🤖";
 const candyEmoji = "🍬";
 
 const RobotGame = () => {
-  const { board, state, dispatch } = useGame();
+  const { board, state } = useGame();
 
   return (
     <div>

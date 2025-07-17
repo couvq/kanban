@@ -142,7 +142,7 @@ const useGame = () => {
     }
   }, [state.robotPos, state.candyPos]);
 
-  return { board, state, dispatch };
+  return { board, state };
 };
 
 export default useGame;
