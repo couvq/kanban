@@ -104,8 +104,10 @@ const useGame = () => {
       ),
     []
   );
+  const initialState = useMemo(() => initGameState(), []);
 
-  const [state, dispatch] = useReducer(gameReducer, initGameState());
+  // avoid calling initGameState on every render https://react.dev/reference/react/useReducer#avoiding-recreating-the-initial-state
+  const [state, dispatch] = useReducer(gameReducer, initialState);
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "ArrowUp") {
@@ -131,9 +133,9 @@ const useGame = () => {
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
-        console.log('event listener removed')
-        window.removeEventListener("keydown", onKeyDown);
-    }
+      console.log("event listener removed");
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, [onKeyDown]);
 
   // handle collisions
