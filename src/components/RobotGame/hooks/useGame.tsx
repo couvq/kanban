@@ -1,0 +1,148 @@
+import { useEffect, useMemo, useReducer } from "react";
+
+const GRID_SIZE = 5;
+
+type GameState = {
+  robotPos: [number, number];
+  candyPos: [number, number];
+  score: number;
+};
+
+type GameAction =
+  | { type: "MOVE"; direction: "up" | "down" | "left" | "right" }
+  | { type: "COLLISION" };
+
+const getRandomPosition = (): [number, number] => {
+  const randomRow = Math.floor(Math.random() * GRID_SIZE);
+  const randomCol = Math.floor(Math.random() * GRID_SIZE);
+  return [randomRow, randomCol];
+};
+
+const getCandyPos = (robotPosition: [number, number]) => {
+  let candyPosition = getRandomPosition();
+  while (
+    candyPosition[0] === robotPosition[0] &&
+    candyPosition[1] === robotPosition[1]
+  ) {
+    candyPosition = getRandomPosition();
+  }
+  return candyPosition;
+};
+
+const gameReducer = (state: GameState, action: GameAction) => {
+  switch (action.type) {
+    case "MOVE": {
+      if (action.direction === "up") {
+        return {
+          ...state,
+          robotPos:
+            state.robotPos[0] !== 0
+              ? [state.robotPos[0] - 1, state.robotPos[1]]
+              : [...state.robotPos],
+        };
+      }
+
+      if (action.direction === "down") {
+        return {
+          ...state,
+          robotPos:
+            state.robotPos[0] !== GRID_SIZE - 1
+              ? [state.robotPos[0] + 1, state.robotPos[1]]
+              : [...state.robotPos],
+        };
+      }
+
+      if (action.direction === "left") {
+        return {
+          ...state,
+          robotPos:
+            state.robotPos[1] !== 0
+              ? [state.robotPos[0], state.robotPos[1] - 1]
+              : [...state.robotPos],
+        };
+      }
+
+      if (action.direction === "right") {
+        return {
+          ...state,
+          robotPos:
+            state.robotPos[1] !== GRID_SIZE - 1
+              ? [state.robotPos[0], state.robotPos[1] + 1]
+              : [...state.robotPos],
+        };
+      }
+
+      return { ...state };
+    }
+    case "COLLISION": {
+      return {
+        ...state,
+        score: state.score + 1,
+        candyPos: getCandyPos(state.robotPos),
+      };
+    }
+    default: {
+      throw new Error(`Unsupported action: ${action.type}`);
+    }
+  }
+};
+
+const initGameState = (): GameState => {
+  const robotPos = getRandomPosition();
+  return {
+    robotPos,
+    candyPos: getCandyPos(robotPos),
+    score: 0,
+  };
+};
+
+const useGame = () => {
+  const board = useMemo(
+    () =>
+      Array.from({ length: GRID_SIZE }, () =>
+        Array.from({ length: GRID_SIZE })
+      ),
+    []
+  );
+
+  const [state, dispatch] = useReducer(gameReducer, initGameState());
+
+  // move robot with keyboard
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowUp") {
+        dispatch({ type: "MOVE", direction: "up" });
+      }
+
+      if (e.key === "ArrowDown") {
+        dispatch({ type: "MOVE", direction: "down" });
+      }
+
+      if (e.key === "ArrowLeft") {
+        dispatch({ type: "MOVE", direction: "left" });
+      }
+
+      if (e.key === "ArrowRight") {
+        dispatch({ type: "MOVE", direction: "right" });
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [state.robotPos]);
+
+  // handle collisions
+  useEffect(() => {
+    if (
+      state.robotPos[0] === state.candyPos[0] &&
+      state.robotPos[1] === state.candyPos[1]
+    ) {
+      dispatch({ type: "COLLISION" });
+    }
+  }, [state.robotPos, state.candyPos]);
+
+  return { board, state, dispatch };
+};
+
+export default useGame;

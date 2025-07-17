@@ -1,4 +1,4 @@
-import Autocomplete from "./components/Autocomplete";
+import RobotGame from "./components/RobotGame";
 
 const city_names = [
   "Aberdeen",
@@ -389,7 +389,7 @@ const city_names = [
 ];
 
 function App() {
-  return <Autocomplete suggestions={city_names} threshold={1} />;
+  return <RobotGame />;
 }
 
 export default App;
