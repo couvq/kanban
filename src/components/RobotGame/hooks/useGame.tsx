@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer } from "react";
+import { useCallback, useEffect, useMemo, useReducer } from "react";
 
 const GRID_SIZE = 5;
 
@@ -107,30 +107,34 @@ const useGame = () => {
 
   const [state, dispatch] = useReducer(gameReducer, initGameState());
 
+  const onKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "ArrowUp") {
+      dispatch({ type: "MOVE", direction: "up" });
+    }
+
+    if (e.key === "ArrowDown") {
+      dispatch({ type: "MOVE", direction: "down" });
+    }
+
+    if (e.key === "ArrowLeft") {
+      dispatch({ type: "MOVE", direction: "left" });
+    }
+
+    if (e.key === "ArrowRight") {
+      dispatch({ type: "MOVE", direction: "right" });
+    }
+  }, []);
+
   // move robot with keyboard
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowUp") {
-        dispatch({ type: "MOVE", direction: "up" });
-      }
-
-      if (e.key === "ArrowDown") {
-        dispatch({ type: "MOVE", direction: "down" });
-      }
-
-      if (e.key === "ArrowLeft") {
-        dispatch({ type: "MOVE", direction: "left" });
-      }
-
-      if (e.key === "ArrowRight") {
-        dispatch({ type: "MOVE", direction: "right" });
-      }
-    };
-
+    console.log("event listener attached");
     window.addEventListener("keydown", onKeyDown);
 
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [state.robotPos]);
+    return () => {
+        console.log('event listener removed')
+        window.removeEventListener("keydown", onKeyDown);
+    }
+  }, [onKeyDown]);
 
   // handle collisions
   useEffect(() => {
