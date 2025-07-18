@@ -6,11 +6,14 @@ type GameState = {
   robotPos: [number, number];
   candyPos: [number, number];
   score: number;
+  timer: number;
+  isFinished: boolean;
 };
 
 type GameAction =
   | { type: "MOVE"; direction: "up" | "down" | "left" | "right" }
-  | { type: "COLLISION" };
+  | { type: "COLLISION" }
+  | { type: "COUNTDOWN" };
 
 const getRandomPosition = (): [number, number] => {
   const randomRow = Math.floor(Math.random() * GRID_SIZE);
@@ -81,6 +84,20 @@ const gameReducer = (state: GameState, action: GameAction) => {
         candyPos: getCandyPos(state.robotPos),
       };
     }
+    case "COUNTDOWN": {
+      if (state.timer > 1) {
+        return {
+          ...state,
+          timer: state.timer - 1,
+        };
+      } else {
+        return {
+          ...state,
+          timer: 0,
+          isFinished: true,
+        };
+      }
+    }
     default: {
       throw new Error(`Unsupported action: ${action.type}`);
     }
@@ -93,6 +110,8 @@ const initGameState = (): GameState => {
     robotPos,
     candyPos: getCandyPos(robotPos),
     score: 0,
+    timer: 30,
+    isFinished: false,
   };
 };
 
@@ -129,14 +148,16 @@ const useGame = () => {
 
   // move robot with keyboard
   useEffect(() => {
-    console.log("event listener attached");
-    window.addEventListener("keydown", onKeyDown);
+    if (!state.isFinished) {
+      console.log("event listener attached");
+      window.addEventListener("keydown", onKeyDown);
+    }
 
     return () => {
       console.log("event listener removed");
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [onKeyDown]);
+  }, [onKeyDown, state.isFinished]);
 
   // handle collisions
   useEffect(() => {
@@ -147,6 +168,21 @@ const useGame = () => {
       dispatch({ type: "COLLISION" });
     }
   }, [state.robotPos, state.candyPos]);
+
+  // handle timer
+  useEffect(() => {
+    const intervalId = !state.isFinished
+      ? setInterval(() => {
+          console.log("interval triggered");
+          dispatch({ type: "COUNTDOWN" });
+        }, 1000)
+      : undefined;
+
+    return () => {
+        console.log('interval cleared')
+        clearInterval(intervalId)
+    }
+  }, [state.isFinished]);
 
   return { board, state };
 };

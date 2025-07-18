@@ -15,7 +15,9 @@ const RobotGame = () => {
         <br />
         Each candy collected increments your score.
       </p>
+      <br />
       <p>Score: {state.score}</p>
+      <p>Timer: {state.timer}</p>
       <table>
         <tbody>
           {board.map((row, rowIdx) => (
