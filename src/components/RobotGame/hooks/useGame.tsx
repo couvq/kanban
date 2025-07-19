@@ -13,7 +13,8 @@ type GameState = {
 type GameAction =
   | { type: "MOVE"; direction: "up" | "down" | "left" | "right" }
   | { type: "COLLISION" }
-  | { type: "COUNTDOWN" };
+  | { type: "COUNTDOWN" }
+  | { type: "RESET" };
 
 const getRandomPosition = (): [number, number] => {
   const randomRow = Math.floor(Math.random() * GRID_SIZE);
@@ -98,6 +99,9 @@ const gameReducer = (state: GameState, action: GameAction) => {
         };
       }
     }
+    case "RESET": {
+      return initGameState()
+    }
     default: {
       throw new Error(`Unsupported action: ${action.type}`);
     }
@@ -179,12 +183,12 @@ const useGame = () => {
       : undefined;
 
     return () => {
-        console.log('interval cleared')
-        clearInterval(intervalId)
-    }
+      console.log("interval cleared");
+      clearInterval(intervalId);
+    };
   }, [state.isFinished]);
 
-  return { board, state };
+  return { board, state, dispatch };
 };
 
 export default useGame;
