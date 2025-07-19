@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useReducer } from "react";
+import { Howl } from "howler";
 
 const GRID_SIZE = 5;
 
@@ -79,6 +80,9 @@ const gameReducer = (state: GameState, action: GameAction) => {
       return { ...state };
     }
     case "COLLISION": {
+      const audio = new Audio('https://commondatastorage.googleapis.com/codeskulptor-assets/Collision8-Bit.ogg')
+      audio.play()
+      
       return {
         ...state,
         score: state.score + 1,
@@ -100,7 +104,7 @@ const gameReducer = (state: GameState, action: GameAction) => {
       }
     }
     case "RESET": {
-      return initGameState()
+      return initGameState();
     }
     default: {
       throw new Error(`Unsupported action: ${action.type}`);
