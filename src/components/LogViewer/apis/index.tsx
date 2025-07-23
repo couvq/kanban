@@ -11,7 +11,7 @@ const createLogEntry = (): LogEntry => {
   const level: LogEntry["level"] =
     levels[Math.floor(Math.random() * levels.length)];
   const timestamp = faker.date.recent().toISOString();
-  const text = faker.lorem.sentences(3);
+  const text = faker.lorem.paragraphs(5);
   return {
     level,
     timestamp,
@@ -22,7 +22,7 @@ const createLogEntry = (): LogEntry => {
 const fetchNewLogs = (): Promise<LogEntry[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const fakeLogEntries = Array.from({ length: 100 }, createLogEntry);
+      const fakeLogEntries = Array.from({ length: 50 }, createLogEntry);
       resolve(fakeLogEntries);
     }, 200);
   });

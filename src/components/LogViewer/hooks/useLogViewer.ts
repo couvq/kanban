@@ -3,10 +3,16 @@ import type { LogEntry } from "../apis";
 import fetchNewLogs from "../apis";
 import { useInView } from "react-intersection-observer";
 
-const useLogViewer = (): [boolean, LogEntry[], (node?: Element | null) => void] => {
+const useLogViewer = (): [
+  boolean,
+  LogEntry[],
+  (node?: Element | null) => void
+] => {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [ref, inView] = useInView()
+  const [ref, inView] = useInView({
+    rootMargin: "0px 0px 1000px 0px",
+  });
 
   useEffect(() => {
     fetchNewLogs()
@@ -15,15 +21,15 @@ const useLogViewer = (): [boolean, LogEntry[], (node?: Element | null) => void] 
   }, []);
 
   useEffect(() => {
-    if(inView) {
-      setIsLoading(true)
+    if (inView) {
+      setIsLoading(true);
       fetchNewLogs()
-      .then((data) => setLogs((prevLogs) => [...prevLogs, ...data]))
-      .finally(() => setIsLoading(false))
+        .then((data) => setLogs((prevLogs) => [...prevLogs, ...data]))
+        .finally(() => setIsLoading(false));
     }
-  }, [inView])
+  }, [inView]);
 
-  return [isLoading, logs, ref]
+  return [isLoading, logs, ref];
 };
 
 export default useLogViewer;

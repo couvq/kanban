@@ -12,8 +12,8 @@ const LogViewer = () => {
           <LogRow log={log} />
         ))}
         {isLoading && 'Loading...'}
-        <div id="hidden_in_view_ref" ref={ref}></div>
       </List>
+      <div id="hidden_in_view_ref" ref={ref}></div>
     </div>
   );
 };
