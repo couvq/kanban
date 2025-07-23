@@ -22,7 +22,7 @@ const createLogEntry = (): LogEntry => {
 const fetchNewLogs = (): Promise<LogEntry[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const fakeLogEntries = Array.from({ length: 10 }, createLogEntry);
+      const fakeLogEntries = Array.from({ length: 1000 }, createLogEntry);
       resolve(fakeLogEntries);
     }, 200);
   });

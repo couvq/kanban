@@ -1,13 +1,12 @@
 import { List } from "@mui/material";
-import { useEffect, useState } from "react";
-import fetchNewLogs, { type LogEntry } from "./apis";
+import useLogViewer from "./hooks/useLogViewer";
 import LogRow from "./LogRow";
 
 const LogViewer = () => {
-  const [logs, setLogs] = useState<LogEntry[]>([]);
-  useEffect(() => {
-    fetchNewLogs().then((data) => setLogs(data));
-  }, []);
+  const [isLoading, logs] = useLogViewer()
+
+  if(isLoading) return 'Loading...'
+  
   return (
     <div>
       <List>
