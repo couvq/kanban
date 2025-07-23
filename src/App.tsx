@@ -1,4 +1,4 @@
-import RobotGame from "./components/RobotGame";
+import LogViewer from "./components/LogViewer";
 
 const city_names = [
   "Aberdeen",
@@ -389,7 +389,7 @@ const city_names = [
 ];
 
 function App() {
-  return <RobotGame />;
+  return <LogViewer />;
 }
 
 export default App;
