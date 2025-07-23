@@ -3,16 +3,16 @@ import useLogViewer from "./hooks/useLogViewer";
 import LogRow from "./LogRow";
 
 const LogViewer = () => {
-  const [isLoading, logs] = useLogViewer()
+  const [isLoading, logs, ref] = useLogViewer();
 
-  if(isLoading) return 'Loading...'
-  
   return (
     <div>
       <List>
         {logs.map((log) => (
           <LogRow log={log} />
         ))}
+        {isLoading && 'Loading...'}
+        <div id="hidden_in_view_ref" ref={ref}></div>
       </List>
     </div>
   );
