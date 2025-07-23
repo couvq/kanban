@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useReducer } from "react";
-import { Howl } from "howler";
 
 const GRID_SIZE = 5;
 
